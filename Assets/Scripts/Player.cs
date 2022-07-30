@@ -17,7 +17,9 @@ public class Player : MonoBehaviour
     // float yLimit = 3f;
     //[SerializeField]
     //float xLimit = 500f;
- 
+    [SerializeField]
+    private float _fireRate = 0.5f;
+    private float _canFire = -1f;
     Vector3 frameOrigin = new Vector3(0, 1, 0);
     //lazer Game Object
 
@@ -37,18 +39,20 @@ public class Player : MonoBehaviour
     void Update()
     {
         
-        Debug.Log(m_Renderer.isVisible);
+       // Debug.Log(m_Renderer.isVisible);
         Movement();
         ScreenWrap();
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
         {
-            Instantiate(lazerPrefab,transform.position, Quaternion.identity);
+            _canFire = Time.time + _fireRate;
+            Instantiate(lazerPrefab,transform.position + new Vector3(0,0.8f,0), Quaternion.identity);
         }
     }
 
 
     void ScreenWrap()
     {
+        //established up above to test if player is visible with a renderer
         var isVisible = m_Renderer.isVisible;
 
         if (isVisible)
@@ -69,17 +73,17 @@ public class Player : MonoBehaviour
         if (!isWrappingX && (screenPos.x > 1 || screenPos.x < 0))
         {
             newPosition.x = -newPosition.x;
-
+            //set wrap for x
             isWrappingX = true;
         }
 
         if (!isWrappingY && (screenPos.y > 1 || screenPos.y < 0))
         {
             newPosition.y = -newPosition.y;
-
+            //set wrap for
             isWrappingY = true;
         }
-
+        
         transform.position = newPosition;
     }
 
