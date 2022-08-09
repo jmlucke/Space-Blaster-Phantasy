@@ -10,6 +10,7 @@ public class Player : MonoBehaviour
     //left right movement speed
     
     float _speed=7f;
+
     //Up down movement speed
 
     //Limit Movement Area
@@ -23,6 +24,9 @@ public class Player : MonoBehaviour
     Vector3 frameOrigin = new Vector3(0, 1, 0);
     //lazer Game Object
 
+    //somthing to count player lives
+    [SerializeField]
+     int player_lives = 3;
     public GameObject lazerPrefab;
     bool isWrappingX = false;
     bool isWrappingY = false;
@@ -87,6 +91,14 @@ public class Player : MonoBehaviour
         transform.position = newPosition;
     }
 
+    public void UpdatePlayerLife(int number)
+    {
+        player_lives += number;
+    }
+    public int GetPlayerLife()
+    {
+        return player_lives;
+    }
     void Movement()
     {
         float horizontalInput = Input.GetAxis("Horizontal");
