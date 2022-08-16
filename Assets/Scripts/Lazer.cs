@@ -6,7 +6,7 @@ public class Lazer : MonoBehaviour
 {
     // Start is called before the first frame update\
     //Projectile speed
-    float _speed = 5.0f;
+    float _speed = 3.5f;
     Renderer l_Renderer;
      
     void Start()

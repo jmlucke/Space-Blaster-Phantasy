@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class Spawn_Manger : MonoBehaviour
 {
-    // Script spawns objects
+     
     [SerializeField]
     private bool isEnemySpawnActive = true;
-    //In this game it is the various enimies.
+    //Enememy
     public GameObject enemyPrefab;
-    public float spawnRate = 3f;
+    //two and half second delay. Could be longer and vary in the future.
+    public float spawnRate = 2.5f;
 
      
     void Start()
@@ -17,7 +18,7 @@ public class Spawn_Manger : MonoBehaviour
         StartCoroutine(SpawnEnemy());
     }
 
-    // Update is called once per frame
+     
     void Update()
     {
 
@@ -29,12 +30,17 @@ public class Spawn_Manger : MonoBehaviour
         while (isEnemySpawnActive)
         {
             //To determine spawn location needs to be set Y but variable X.
-
+            //Currently random but could be a pattern.
             Instantiate(enemyPrefab, transform.position + new Vector3(Random.Range(-9f, 9f),6, 0), Quaternion.identity);
             yield return new WaitForSeconds(spawnRate);
         }
-        //do stuff
+  
          
          
+    }
+
+    public void SetIsEnemySpawnActive(bool spawn)
+    {
+        isEnemySpawnActive = spawn;
     }
 }

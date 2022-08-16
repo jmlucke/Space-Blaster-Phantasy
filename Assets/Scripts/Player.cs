@@ -13,20 +13,14 @@ public class Player : MonoBehaviour
 
     //Up down movement speed
 
-    //Limit Movement Area
-    //  [SerializeField]
-    // float yLimit = 3f;
-    //[SerializeField]
-    //float xLimit = 500f;
+    //Lazer settings
     [SerializeField]
     private float _fireRate = 0.5f;
     private float _canFire = -1f;
     Vector3 frameOrigin = new Vector3(0, 1, 0);
-    //lazer Game Object
-
-    //somthing to count player lives
+    //somthing to count player extra lives
     [SerializeField]
-     int player_lives = 3;
+     int player_lives = 2;
     public GameObject lazerPrefab;
     bool isWrappingX = false;
     bool isWrappingY = false;
@@ -35,15 +29,14 @@ public class Player : MonoBehaviour
         //take a posistion and zero in out x,y,z
         cam = Camera.main;
         m_Renderer = GetComponent<Renderer>();
-        transform.position = new Vector3(0, 0, 0);
+        //transform.position = new Vector3(0, 0, 0);
   
     }
 
     // Update is called once per frame
     void Update()
     {
-        
-       // Debug.Log(m_Renderer.isVisible);
+      
         Movement();
         ScreenWrap();
         if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
@@ -84,7 +77,7 @@ public class Player : MonoBehaviour
         if (!isWrappingY && (screenPos.y > 1 || screenPos.y < 0))
         {
             newPosition.y = -newPosition.y;
-            //set wrap for
+            //set wrap for y
             isWrappingY = true;
         }
         

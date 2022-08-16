@@ -5,7 +5,7 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     // Start is called before the first frame update
-    float _speed = 2.5f;
+    float _speed = 2f;
     Renderer e_Renderer;
     void Start()
     {
@@ -24,7 +24,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         Debug.Log("Test output coll " + other.tag);
         if (other.tag=="Player")
@@ -35,6 +35,8 @@ public class Enemy : MonoBehaviour
             {
                 Destroy(this.gameObject);
                 Destroy(other.gameObject);
+                //stop spawing enemies
+                GameObject.Find("Spawn_Manger").GetComponent<Spawn_Manger>().SetIsEnemySpawnActive(false);
                 //Also should trigger GameOver Screen.
             }
             else
