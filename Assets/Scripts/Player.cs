@@ -17,11 +17,16 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float _fireRate = 0.5f;
     private float _canFire = -1f;
+    private float _powerUpRate = 5f;
+    //PowerUps
+
+    private bool _tripleShotIsActive = false;
     Vector3 frameOrigin = new Vector3(0, 1, 0);
     //somthing to count player extra lives
     [SerializeField]
      int player_lives = 2;
     public GameObject lazerPrefab;
+    public GameObject tripleShotPrefab;
     bool isWrappingX = false;
     bool isWrappingY = false;
     void Start()
@@ -39,14 +44,29 @@ public class Player : MonoBehaviour
       
         Movement();
         ScreenWrap();
+        PlayerShoot();
+    }
+    //Controls players firing capabilities
+    void PlayerShoot()
+    {
         if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
         {
+
+            if (_tripleShotIsActive)
+            {
+                Instantiate(tripleShotPrefab, transform.position + new Vector3(0, 0.8f, 0), Quaternion.identity);
+                //Need to destory empty PreFab 
+            }
+            else
+            {
+                Instantiate(lazerPrefab, transform.position + new Vector3(0, 0.8f, 0), Quaternion.identity);
+            }
             _canFire = Time.time + _fireRate;
-            Instantiate(lazerPrefab,transform.position + new Vector3(0,0.8f,0), Quaternion.identity);
+
         }
     }
-
-
+    //Controls screen wrap
+    //Potential future issue with enemy location id
     void ScreenWrap()
     {
         //established up above to test if player is visible with a renderer
@@ -84,14 +104,7 @@ public class Player : MonoBehaviour
         transform.position = newPosition;
     }
 
-    public void UpdatePlayerLife(int number)
-    {
-        player_lives += number;
-    }
-    public int GetPlayerLife()
-    {
-        return player_lives;
-    }
+    //Controls Player Movement
     void Movement()
     {
         float horizontalInput = Input.GetAxis("Horizontal");
@@ -100,4 +113,41 @@ public class Player : MonoBehaviour
         Vector3 direction = new Vector3(horizontalInput, verticalInput, 0);
          transform.Translate( direction * _speed * Time.deltaTime);
     }
+
+    //Getter and Setter Functions
+    public void UpdatePlayerLife(int number)
+    {
+        player_lives += number;
+    }
+    public int GetPlayerLife()
+    {
+        return player_lives;
+    }
+
+    //Could be extraplated to work for anypowerup
+    public void SetPowerUp(bool active, string powerUpType)
+    {
+        //change to switch statement later
+        if(powerUpType=="TripleShot")
+        {
+            _tripleShotIsActive = active;
+        }
+         
+    }
+
+
+    //Wait Functions
+    IEnumerator PowerUpTimer(string powerUpType)
+    {
+        //Waits a certain amount of 
+         
+        yield return new WaitForSeconds(_powerUpRate);
+        //could be switch
+        if (powerUpType == "TripleShot")
+        {
+            _tripleShotIsActive = false;
+        }
+
+    }
+
 }

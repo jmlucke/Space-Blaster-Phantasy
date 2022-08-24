@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Lazer
   - Enemy
+  - Destruct
+  - PowerUp
   layers:
   - Default
   - TransparentFX

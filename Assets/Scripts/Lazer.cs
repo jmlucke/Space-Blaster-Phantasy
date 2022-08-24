@@ -11,7 +11,7 @@ public class Lazer : MonoBehaviour
      
     void Start()
     {
-        l_Renderer = GetComponent<Renderer>();
+       // l_Renderer = GetComponent<Renderer>();
     }
 
     // Update is called once per frame
@@ -20,8 +20,16 @@ public class Lazer : MonoBehaviour
         Vector3 direction = new Vector3(0, _speed, 0);
         transform.Translate(direction * _speed * Time.deltaTime);
         if(!l_Renderer.isVisible)
-        {
-            Destroy(this.gameObject);
+       {
+            if(transform.parent!=null)
+            {
+                Destroy(transform.parent.gameObject);
+            }
+            else
+            {
+                Destroy(this.gameObject);
+            }
+             
         }
     }
 }
