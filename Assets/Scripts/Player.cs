@@ -4,31 +4,34 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    //
+    //camera used to test off screen location
     Camera cam;
     Renderer m_Renderer;
-    //left right movement speed
-    
-    float _speed=7f;
+    //screewrap bools
+    bool isWrappingX = false;
+    bool isWrappingY = false;
 
-    //Up down movement speed
+    //movement speed
+    float _speed=7f;
+ 
+    //PowerUps
+    private bool _tripleShotIsActive = false;
+    private bool _shieldIsActive = false;
+    private bool _speedBoostIsActive = false;
+ 
+    //somthing to count player extra lives
+    [SerializeField]
+     int player_lives = 2;
 
     //Lazer settings
     [SerializeField]
     private float _fireRate = 0.5f;
     private float _canFire = -1f;
     private float _powerUpRate = 5f;
-    //PowerUps
-
-    private bool _tripleShotIsActive = false;
-    Vector3 frameOrigin = new Vector3(0, 1, 0);
-    //somthing to count player extra lives
-    [SerializeField]
-     int player_lives = 2;
+    //projectiles prefabs
     public GameObject lazerPrefab;
     public GameObject tripleShotPrefab;
-    bool isWrappingX = false;
-    bool isWrappingY = false;
+ 
     void Start()
     {
         //take a posistion and zero in out x,y,z
@@ -125,12 +128,24 @@ public class Player : MonoBehaviour
     }
 
     //Could be extraplated to work for anypowerup
-    public void SetPowerUp(bool active, string powerUpType)
+    public void SetPowerUp(bool active, int powerUpType)
     {
         //change to switch statement later
-        if(powerUpType=="TripleShot")
+ 
+        switch(powerUpType)
         {
-            _tripleShotIsActive = active;
+            case 0:
+                _tripleShotIsActive = active;
+                break;
+            case 1:
+                _shieldIsActive = active;
+                break;
+            case 2:
+                _speedBoostIsActive = active;
+                break;
+            default:
+                break; 
+
         }
          
     }
