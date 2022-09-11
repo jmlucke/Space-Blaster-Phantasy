@@ -39,10 +39,12 @@ public class Spawn_Manger : MonoBehaviour
             if(Random.Range(0,4)==1)
             {
                 int powerUpType = Random.Range(0, 3);
+                 
                 switch (powerUpType)
                 {
 
                     case 0:
+
                         Instantiate(lazer_powerUp, transform.position + new Vector3(Random.Range(-9f, 9f), 6, 0), Quaternion.identity);
                         break;
                     case 1:

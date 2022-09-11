@@ -7,9 +7,11 @@ public class Enemy : MonoBehaviour
     // Start is called before the first frame update
     float _speed = 2f;
     Renderer e_Renderer;
+    private Player _player;
     void Start()
     {
         e_Renderer = GetComponent<Renderer>();
+        _player = GameObject.Find("Player").GetComponent<Player>();
     }
 
     // Update is called once per frame
@@ -38,11 +40,19 @@ public class Enemy : MonoBehaviour
                 //stop spawing enemies
                 GameObject.Find("Spawn_Manger").GetComponent<Spawn_Manger>().SetIsEnemySpawnActive(false);
                 //Also should trigger GameOver Screen.
+                Debug.Log("End game");
+                GameObject.Find("Canvas").GetComponent<UI_Manger>().startGameOver();
+
+
+
             }
             else
             {
                 Destroy(this.gameObject);
-                GameObject.Find("Player").GetComponent<Player>().UpdatePlayerLife(-1);
+                _player.UpdatePlayerLife(-1);
+                _player.SetPowerUp(false, 1);
+              //  Debug.Log("Collsion life");
+                 
             }
 
 
@@ -52,8 +62,10 @@ public class Enemy : MonoBehaviour
         {
             //If Laser hits a enemy destory both
             //Will need Score increment on this.
+             
             Destroy(other.gameObject);
             Destroy(this.gameObject);
+            _player.UpdateScore(10);
         }
     }
 }

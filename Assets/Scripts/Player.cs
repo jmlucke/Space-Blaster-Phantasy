@@ -13,12 +13,15 @@ public class Player : MonoBehaviour
 
     //movement speed
     float _speed=7f;
- 
+    float _speed_boost = 10f;
     //PowerUps
+   // [SerializeField]
     private bool _tripleShotIsActive = false;
     private bool _shieldIsActive = false;
     private bool _speedBoostIsActive = false;
- 
+
+    //Score related
+    private int _score = 0;
     //somthing to count player extra lives
     [SerializeField]
      int player_lives = 2;
@@ -58,6 +61,7 @@ public class Player : MonoBehaviour
             if (_tripleShotIsActive)
             {
                 Instantiate(tripleShotPrefab, transform.position + new Vector3(0, 0.8f, 0), Quaternion.identity);
+                 
                 //Need to destory empty PreFab 
             }
             else
@@ -114,13 +118,33 @@ public class Player : MonoBehaviour
         float verticalInput = Input.GetAxis("Vertical");
         // direction is a composite of vertical and horizontal
         Vector3 direction = new Vector3(horizontalInput, verticalInput, 0);
-         transform.Translate( direction * _speed * Time.deltaTime);
+        if(_speedBoostIsActive)
+        {
+            transform.Translate(direction * _speed * Time.deltaTime);
+            PowerUpTimer(2);
+        }
+        else
+        {
+            transform.Translate(direction * _speed_boost * Time.deltaTime);
+        }
+          
+    }
+
+    void Shield()
+    {
+        
+
     }
 
     //Getter and Setter Functions
     public void UpdatePlayerLife(int number)
     {
         player_lives += number;
+        Debug.Log(player_lives);
+        if(!_shieldIsActive)
+        {
+            GameObject.Find("Canvas").GetComponent<UI_Manger>().UpdateLives(player_lives);
+        }
     }
     public int GetPlayerLife()
     {
@@ -136,12 +160,17 @@ public class Player : MonoBehaviour
         {
             case 0:
                 _tripleShotIsActive = active;
+                StartCoroutine(PowerUpTimer(powerUpType));
                 break;
             case 1:
                 _shieldIsActive = active;
+                if (_shieldIsActive==true) UpdatePlayerLife(1);
+                 
+                //StartCoroutine(PowerUpTimer(powerUpType));
                 break;
             case 2:
                 _speedBoostIsActive = active;
+                StartCoroutine(PowerUpTimer(powerUpType));
                 break;
             default:
                 break; 
@@ -152,17 +181,39 @@ public class Player : MonoBehaviour
 
 
     //Wait Functions
-    IEnumerator PowerUpTimer(string powerUpType)
+    IEnumerator PowerUpTimer(int powerUpType)
     {
         //Waits a certain amount of 
-         
+        
         yield return new WaitForSeconds(_powerUpRate);
         //could be switch
-        if (powerUpType == "TripleShot")
+ 
+
+        switch (powerUpType)
         {
-            _tripleShotIsActive = false;
+            case 0:
+                 
+                _tripleShotIsActive = false;
+                break;
+            case 1:
+               // _shieldIsActive = false;
+                break;
+            case 2:
+                _speedBoostIsActive = false;
+                break;
+            default:
+                break;
+
         }
 
+    }
+
+    //Score related and UI
+    public void UpdateScore(int num)
+    {
+        _score += num;
+        Debug.Log("Test");
+        GameObject.Find("Canvas").GetComponent<UI_Manger>().SetScore(_score.ToString());
     }
 
 }

@@ -4,22 +4,31 @@ using UnityEngine;
 
 public class PowerUp : MonoBehaviour
 {
-    // Start is called before the first frame update
-    //Defined on Object Spawn
+    //GameObject move speed
+    float _speed = 2f;
+    //Could do a renderer or zone or despawn timer.
+    Renderer p_Renderer;
+
+    //PowerUp id 0-2
     [SerializeField]
     int powerUpType;
     void Start()
     {
-        //testing triple shot
-        powerUpType = 0;
+        p_Renderer = GetComponent<Renderer>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
-    }
+        Vector3 direction = new Vector3(0, -_speed, 0);
+        transform.Translate(direction * _speed * Time.deltaTime);
 
+        if (!p_Renderer.isVisible)
+        {
+            Destroy(this.gameObject);
+        }
+        // printPowerUpType(powerUpType);
+    }
     public void printPowerUpType(int typeCode)
     {
         switch (powerUpType)
@@ -38,8 +47,6 @@ public class PowerUp : MonoBehaviour
                 Debug.Log("Unknown PowerUp");
                 break;
         }
-
-
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -47,17 +54,12 @@ public class PowerUp : MonoBehaviour
         if(other.tag=="Player")
         {
             Player player = other.transform.GetComponent<Player>();
+             
             if (player != null)
-            {
-                 
+            {            
                 GameObject.Find("Player").GetComponent<Player>().SetPowerUp(true, powerUpType);
-              
-                printPowerUpType(powerUpType);
 
             }
-             
-
-
         }
          
         Destroy(this.gameObject);

@@ -11,7 +11,7 @@ public class Lazer : MonoBehaviour
      
     void Start()
     {
-       // l_Renderer = GetComponent<Renderer>();
+        l_Renderer = GetComponent<Renderer>();
     }
 
     // Update is called once per frame

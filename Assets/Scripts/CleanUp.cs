@@ -17,7 +17,7 @@ public class CleanUp : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log(other.tag);
-        Destroy(other.gameObject);
+       // Debug.Log(other.tag);
+        if(other.tag!="Player")Destroy(other.gameObject);
     }
 }
