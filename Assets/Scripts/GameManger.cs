@@ -15,15 +15,33 @@ public class GameManger : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(_GameOver && Input.GetKeyDown(KeyCode.R))
+        if(_GameOver)
         {
-            SceneManager.LoadScene("Game");
+            //could be rewritten to be more elegant
+            if(Input.GetKeyDown(KeyCode.R))
+            {
+                LoadGame();
+            }
+
+            if (Input.GetKeyDown(KeyCode.M))
+            {
+                SceneManager.LoadScene("Main_Menu");
+            }
+                 
         }
     }
     public void SetGameStatus(bool status)
     {
         _GameOver = status;
     }
-
+     
+    public void LoadGame()
+    {
+        SceneManager.LoadScene("Game");
+    }
+    public void ExitGameProgram()
+    {
+        Application.Quit();
+    }
 
 }

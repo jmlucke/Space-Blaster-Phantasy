@@ -7,11 +7,19 @@ public class Enemy : MonoBehaviour
     // Start is called before the first frame update
     float _speed = 2f;
     Renderer e_Renderer;
+    private Animator e_Animator;
     private Player _player;
+    private bool _enemy_hit=false;
     void Start()
     {
         e_Renderer = GetComponent<Renderer>();
         _player = GameObject.Find("Player").GetComponent<Player>();
+        e_Animator = GetComponent<Animator>();
+      
+        if (e_Animator==null)
+        {
+            Debug.Log("Animator is null on Enemy");
+        }
     }
 
     // Update is called once per frame
@@ -28,44 +36,43 @@ public class Enemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("Test output coll " + other.tag);
-        if (other.tag=="Player")
+
+        if (!_enemy_hit )
         {
+            //Explosion sound
              
-            //calls get and set functions to update player life counts and destory if less than 1
-            if (1 > GameObject.Find("Player").GetComponent<Player>().GetPlayerLife())
+            if (other.tag == "Player")
             {
-                Destroy(this.gameObject);
+                //prevents double hit
+                _player.PlaySound(1);
+                _enemy_hit = true;
+                _player.Damage();
+                if (_player.GetPlayerLife() == 0)
+                {
+
+                    e_Animator.SetTrigger("Enemy_Dead");
+                    Destroy(other.gameObject);
+                    GameObject.Find("Spawn_Manger").GetComponent<Spawn_Manger>().SetIsEnemySpawnActive(false);
+                    GameObject.Find("Canvas").GetComponent<UI_Manger>().startGameOver();
+                }
+                else
+                {
+                    _speed = 0;
+                    e_Animator.SetTrigger("Enemy_Dead");
+                }
+            }
+            if (other.tag == "Lazer")
+            {
+                //If Laser hits a enemy destory both
+                //Will need Score increment on this.
+                //prevents double hit
+                _player.PlaySound(1);
+                _enemy_hit = true;
                 Destroy(other.gameObject);
-                //stop spawing enemies
-                GameObject.Find("Spawn_Manger").GetComponent<Spawn_Manger>().SetIsEnemySpawnActive(false);
-                //Also should trigger GameOver Screen.
-                Debug.Log("End game");
-                GameObject.Find("Canvas").GetComponent<UI_Manger>().startGameOver();
-
-
-
+                _speed = 0;
+                e_Animator.SetTrigger("Enemy_Dead");
+                _player.UpdateScore(10);
             }
-            else
-            {
-                Destroy(this.gameObject);
-                _player.UpdatePlayerLife(-1);
-                _player.SetPowerUp(false, 1);
-              //  Debug.Log("Collsion life");
-                 
-            }
-
-
-
-        }
-        if(other.tag=="Lazer")
-        {
-            //If Laser hits a enemy destory both
-            //Will need Score increment on this.
-             
-            Destroy(other.gameObject);
-            Destroy(this.gameObject);
-            _player.UpdateScore(10);
         }
     }
 }

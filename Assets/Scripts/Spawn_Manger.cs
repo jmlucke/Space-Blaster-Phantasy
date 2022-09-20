@@ -5,8 +5,8 @@ using UnityEngine;
 public class Spawn_Manger : MonoBehaviour
 {
      
-    [SerializeField]
-    private bool isEnemySpawnActive = true;
+   
+    private bool isEnemySpawnActive = false;
     //Enememy
     public GameObject enemyPrefab;
     public GameObject lazer_powerUp;
@@ -18,7 +18,7 @@ public class Spawn_Manger : MonoBehaviour
 
     void Start()
     {
-        StartCoroutine(SpawnEnemy());
+        //StartCoroutine(SpawnEnemy());
     }
 
      
@@ -68,5 +68,9 @@ public class Spawn_Manger : MonoBehaviour
     public void SetIsEnemySpawnActive(bool spawn)
     {
         isEnemySpawnActive = spawn;
+        if(isEnemySpawnActive)
+        {
+            StartCoroutine(SpawnEnemy());
+        }
     }
 }

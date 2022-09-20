@@ -25,7 +25,8 @@ public class Player : MonoBehaviour
     //somthing to count player extra lives
     [SerializeField]
      int player_lives = 2;
-
+    //Shield
+    public GameObject shieldVisual;
     //Lazer settings
     [SerializeField]
     private float _fireRate = 0.5f;
@@ -34,14 +35,29 @@ public class Player : MonoBehaviour
     //projectiles prefabs
     public GameObject lazerPrefab;
     public GameObject tripleShotPrefab;
- 
+    private AudioSource _audioSource;
+    //Audio CLips
+    [SerializeField]
+    private AudioClip _lazerSound;
+    [SerializeField]
+    private AudioClip _explosionSound;
+    [SerializeField]
+    private AudioClip _powerUpSound;
+    //AudioSource source = gameObject.GetComponent<AudioSource>();
+     
+
     void Start()
     {
         //take a posistion and zero in out x,y,z
         cam = Camera.main;
         m_Renderer = GetComponent<Renderer>();
-        //transform.position = new Vector3(0, 0, 0);
-  
+        if (this.gameObject != null)
+        {
+            _audioSource = GetComponent<AudioSource>();
+        }
+            
+        //add null checking
+
     }
 
     // Update is called once per frame
@@ -51,13 +67,44 @@ public class Player : MonoBehaviour
         Movement();
         ScreenWrap();
         PlayerShoot();
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+
+
     }
+    //Player Audio
+    public void PlaySound(int soundId)
+    {
+        if (this.gameObject == null) return;
+        switch (soundId)
+        {
+            case 0:
+                _audioSource.clip = _lazerSound;
+                _audioSource.Play();
+                break;
+            case 1:
+                _audioSource.clip = _explosionSound;
+                _audioSource.Play();
+                break;
+            case 2:
+                _audioSource.clip = _powerUpSound;
+                _audioSource.Play();
+                break;
+            default:
+                Debug.Log("No sound selected");
+                break;
+
+        }
+    }
+
     //Controls players firing capabilities
     void PlayerShoot()
     {
         if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
         {
-
+            PlaySound(0);
             if (_tripleShotIsActive)
             {
                 Instantiate(tripleShotPrefab, transform.position + new Vector3(0, 0.8f, 0), Quaternion.identity);
@@ -130,10 +177,10 @@ public class Player : MonoBehaviour
           
     }
 
-    void Shield()
+    void Shield(bool state)
     {
-        
 
+        shieldVisual.SetActive(state);
     }
 
     //Getter and Setter Functions
@@ -155,8 +202,8 @@ public class Player : MonoBehaviour
     public void SetPowerUp(bool active, int powerUpType)
     {
         //change to switch statement later
- 
-        switch(powerUpType)
+        PlaySound(2);
+        switch (powerUpType)
         {
             case 0:
                 _tripleShotIsActive = active;
@@ -164,8 +211,9 @@ public class Player : MonoBehaviour
                 break;
             case 1:
                 _shieldIsActive = active;
-                if (_shieldIsActive==true) UpdatePlayerLife(1);
-                 
+                Shield(active);
+               // if (_shieldIsActive==true) UpdatePlayerLife(1);
+
                 //StartCoroutine(PowerUpTimer(powerUpType));
                 break;
             case 2:
@@ -212,8 +260,21 @@ public class Player : MonoBehaviour
     public void UpdateScore(int num)
     {
         _score += num;
-        Debug.Log("Test");
+       // Debug.Log("Test");
         GameObject.Find("Canvas").GetComponent<UI_Manger>().SetScore(_score.ToString());
+    }
+    //Damage
+    public void Damage()
+    {
+        if(_shieldIsActive)
+        {
+             //Shield id 1
+            SetPowerUp(false,1);
+            return;
+
+        }
+
+        UpdatePlayerLife(-1);
     }
 
 }

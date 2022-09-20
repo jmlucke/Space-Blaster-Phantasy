@@ -50,21 +50,43 @@ public class UI_Manger : MonoBehaviour
 
 
     }
+    public void startWave(int waveNum)
+    {
+        StartCoroutine(SetWave(waveNum));
+
+
+    }
 
     IEnumerator SetGameOver()
     {
         
-        _Restart_Info.text = "Press R to Restart Level";
+        _Restart_Info.text = "Press R to Restart Level<br>          M to go to the menu";
         while (1==1)
         {
             _gameOverText.text = "Game Over";
             yield return new WaitForSeconds(0.5f);
             _gameOverText.text = "";
-            Debug.Log("Test9");
             yield return new WaitForSeconds(0.5f);
             GameObject.Find("Game_manger").GetComponent<GameManger>().SetGameStatus(true);
         }
          
+
+    }
+
+    IEnumerator SetWave(int waveNum)
+    {
+        int count = 0;
+        _Restart_Info.text = "'Why did you blow up the asteriod?'";
+        while (count<2)
+        {
+            _gameOverText.text = "Wave " + waveNum;
+            yield return new WaitForSeconds(0.5f);
+            _gameOverText.text = "";
+            yield return new WaitForSeconds(0.5f);
+            count++;
+        }
+        _Restart_Info.text = "";
+        GameObject.Find("Spawn_Manger").GetComponent<Spawn_Manger>().SetIsEnemySpawnActive(true);
 
     }
 }
