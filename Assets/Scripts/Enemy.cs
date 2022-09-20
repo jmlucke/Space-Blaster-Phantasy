@@ -10,6 +10,16 @@ public class Enemy : MonoBehaviour
     private Animator e_Animator;
     private Player _player;
     private bool _enemy_hit=false;
+
+    //Enemy fire
+    [SerializeField]
+    private float _fireRate = 0.5f;
+    private float _canFire = -1f;
+ 
+    //projectiles prefabs
+    public GameObject e_lazerPrefab;
+  
+
     void Start()
     {
         e_Renderer = GetComponent<Renderer>();
@@ -34,6 +44,21 @@ public class Enemy : MonoBehaviour
         }
     }
 
+
+    private void PlayerShoot()
+    {
+        if (Time.time > _canFire)
+        {
+           // PlaySound(0);
+
+             
+                Instantiate(e_lazerPrefab, transform.position + new Vector3(0, -0.8f, 0), Quaternion.identity);
+            
+            _canFire = Time.time + _fireRate;
+
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
 
@@ -44,7 +69,7 @@ public class Enemy : MonoBehaviour
             if (other.tag == "Player")
             {
                 //prevents double hit
-                _player.PlaySound(1);
+                GameObject.Find("Audio SFX").GetComponent<Game_SFX_Manger>().ChangeSFX(1);
                 _enemy_hit = true;
                 _player.Damage();
                 if (_player.GetPlayerLife() == 0)

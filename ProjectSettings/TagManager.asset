@@ -9,6 +9,7 @@ TagManager:
   - Destruct
   - PowerUp
   - Score
+  - E_Lazer
   layers:
   - Default
   - TransparentFX

@@ -223,6 +223,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f63e559d59c1ab54d8f8ca85e52f1476, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _fireRate: 0.5
+  e_lazerPrefab: {fileID: 364720619483265427, guid: 054654e4880cceb41bc282c27e0acc6b, type: 3}
 --- !u!95 &5176558667972268902
 Animator:
   serializedVersion: 4

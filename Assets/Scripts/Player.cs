@@ -78,25 +78,9 @@ public class Player : MonoBehaviour
     public void PlaySound(int soundId)
     {
         if (this.gameObject == null) return;
-        switch (soundId)
-        {
-            case 0:
-                _audioSource.clip = _lazerSound;
-                _audioSource.Play();
-                break;
-            case 1:
-                _audioSource.clip = _explosionSound;
-                _audioSource.Play();
-                break;
-            case 2:
-                _audioSource.clip = _powerUpSound;
-                _audioSource.Play();
-                break;
-            default:
-                Debug.Log("No sound selected");
-                break;
 
-        }
+        GameObject.Find("Audio SFX").GetComponent<Game_SFX_Manger>().ChangeSFX(soundId);
+ 
     }
 
     //Controls players firing capabilities
