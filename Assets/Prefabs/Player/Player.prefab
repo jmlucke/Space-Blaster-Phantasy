@@ -99,10 +99,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 590bbab92fc79f1489a39e3ae56697cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerLives: 2
+  shieldVisual: {fileID: 0}
   _fireRate: 0.5
-  player_lives: 3
-  lazerPrefab: {fileID: 364720619483265427, guid: 7506b5a9747fd5c458612d3b2b8f0dab, type: 3}
-  tripleShotPrefab: {fileID: 2533558164298097352, guid: 2b49c5e41e4d473408d48dde620767a7, type: 3}
+  lazerPrefab: {fileID: 364720619483265427, guid: fb91a6ef3228c5f408f7892bfe390c8f, type: 3}
+  tripleShotPrefab: {fileID: 2533558164298097352, guid: f0a74292e67089d41a7d2da5e9549e58, type: 3}
 --- !u!50 &3819836910847627593
 Rigidbody2D:
   serializedVersion: 4

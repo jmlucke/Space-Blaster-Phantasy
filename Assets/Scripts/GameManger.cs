@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class GameManger : MonoBehaviour
 {
     // Start is called before the first frame update
-    private bool _GameOver = false;
+    private bool _gameOver = false;
     void Start()
     {
         
@@ -15,7 +15,7 @@ public class GameManger : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(_GameOver)
+        if(_gameOver)
         {
             //could be rewritten to be more elegant
             if(Input.GetKeyDown(KeyCode.R))
@@ -32,7 +32,7 @@ public class GameManger : MonoBehaviour
     }
     public void SetGameStatus(bool status)
     {
-        _GameOver = status;
+        _gameOver = status;
     }
      
     public void LoadGame()

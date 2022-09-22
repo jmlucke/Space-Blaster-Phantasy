@@ -6,10 +6,10 @@ public class Enemy : MonoBehaviour
 {
     // Start is called before the first frame update
     float _speed = 2f;
-    Renderer e_Renderer;
-    private Animator e_Animator;
+    Renderer enemyRenderer;
+    private Animator _eAnimator;
     private Player _player;
-    private bool _enemy_hit=false;
+    private bool _enemyHit=false;
 
     //Enemy fire
     [SerializeField]
@@ -22,11 +22,11 @@ public class Enemy : MonoBehaviour
 
     void Start()
     {
-        e_Renderer = GetComponent<Renderer>();
+        enemyRenderer = GetComponent<Renderer>();
         _player = GameObject.Find("Player").GetComponent<Player>();
-        e_Animator = GetComponent<Animator>();
+        _eAnimator = GetComponent<Animator>();
       
-        if (e_Animator==null)
+        if (_eAnimator==null)
         {
             Debug.Log("Animator is null on Enemy");
         }
@@ -38,7 +38,7 @@ public class Enemy : MonoBehaviour
         Vector3 direction = new Vector3(0, -_speed, 0);
         transform.Translate(direction * _speed * Time.deltaTime);
 
-        if (!e_Renderer.isVisible)
+        if (!enemyRenderer.isVisible)
         {
             Destroy(this.gameObject);
         }
@@ -62,7 +62,7 @@ public class Enemy : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
 
-        if (!_enemy_hit )
+        if (!_enemyHit )
         {
             //Explosion sound
              
@@ -70,12 +70,12 @@ public class Enemy : MonoBehaviour
             {
                 //prevents double hit
                 GameObject.Find("Audio SFX").GetComponent<Game_SFX_Manger>().ChangeSFX(1);
-                _enemy_hit = true;
+                _enemyHit = true;
                 _player.Damage();
                 if (_player.GetPlayerLife() == 0)
                 {
 
-                    e_Animator.SetTrigger("Enemy_Dead");
+                    _eAnimator.SetTrigger("Enemy_Dead");
                     Destroy(other.gameObject);
                     GameObject.Find("Spawn_Manger").GetComponent<Spawn_Manger>().SetIsEnemySpawnActive(false);
                     GameObject.Find("Canvas").GetComponent<UI_Manger>().startGameOver();
@@ -83,7 +83,7 @@ public class Enemy : MonoBehaviour
                 else
                 {
                     _speed = 0;
-                    e_Animator.SetTrigger("Enemy_Dead");
+                    _eAnimator.SetTrigger("Enemy_Dead");
                 }
             }
             if (other.tag == "Lazer")
@@ -92,10 +92,10 @@ public class Enemy : MonoBehaviour
                 //Will need Score increment on this.
                 //prevents double hit
                 _player.PlaySound(1);
-                _enemy_hit = true;
+                _enemyHit = true;
                 Destroy(other.gameObject);
                 _speed = 0;
-                e_Animator.SetTrigger("Enemy_Dead");
+                _eAnimator.SetTrigger("Enemy_Dead");
                 _player.UpdateScore(10);
             }
         }

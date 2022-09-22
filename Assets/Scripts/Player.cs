@@ -6,7 +6,7 @@ public class Player : MonoBehaviour
 {
     //camera used to test off screen location
     Camera cam;
-    Renderer m_Renderer;
+    Renderer mainRenderer;
     //screewrap bools
     bool isWrappingX = false;
     bool isWrappingY = false;
@@ -24,7 +24,7 @@ public class Player : MonoBehaviour
     private int _score = 0;
     //somthing to count player extra lives
     [SerializeField]
-     int player_lives = 2;
+     int playerLives = 2;
     //Shield
     public GameObject shieldVisual;
     //Lazer settings
@@ -35,26 +35,15 @@ public class Player : MonoBehaviour
     //projectiles prefabs
     public GameObject lazerPrefab;
     public GameObject tripleShotPrefab;
-    private AudioSource _audioSource;
-    //Audio CLips
-    [SerializeField]
-    private AudioClip _lazerSound;
-    [SerializeField]
-    private AudioClip _explosionSound;
-    [SerializeField]
-    private AudioClip _powerUpSound;
-    //AudioSource source = gameObject.GetComponent<AudioSource>();
+ 
      
 
     void Start()
     {
         //take a posistion and zero in out x,y,z
         cam = Camera.main;
-        m_Renderer = GetComponent<Renderer>();
-        if (this.gameObject != null)
-        {
-            _audioSource = GetComponent<AudioSource>();
-        }
+        mainRenderer = GetComponent<Renderer>();
+ 
             
         //add null checking
 
@@ -108,7 +97,7 @@ public class Player : MonoBehaviour
     void ScreenWrap()
     {
         //established up above to test if player is visible with a renderer
-        var isVisible = m_Renderer.isVisible;
+        var isVisible = mainRenderer.isVisible;
 
         if (isVisible)
         {
@@ -149,6 +138,15 @@ public class Player : MonoBehaviour
         float verticalInput = Input.GetAxis("Vertical");
         // direction is a composite of vertical and horizontal
         Vector3 direction = new Vector3(horizontalInput, verticalInput, 0);
+        if(Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift))
+        {
+            //thrust
+
+        }
+        else
+        {
+            //not thrust
+        }
         if(_speedBoostIsActive)
         {
             transform.Translate(direction * _speed * Time.deltaTime);
@@ -170,16 +168,16 @@ public class Player : MonoBehaviour
     //Getter and Setter Functions
     public void UpdatePlayerLife(int number)
     {
-        player_lives += number;
-        Debug.Log(player_lives);
+        playerLives += number;
+        Debug.Log(playerLives);
         if(!_shieldIsActive)
         {
-            GameObject.Find("Canvas").GetComponent<UI_Manger>().UpdateLives(player_lives);
+            GameObject.Find("Canvas").GetComponent<UI_Manger>().UpdateLives(playerLives);
         }
     }
     public int GetPlayerLife()
     {
-        return player_lives;
+        return playerLives;
     }
 
     //Could be extraplated to work for anypowerup

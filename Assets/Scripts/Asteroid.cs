@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class Asteroid : MonoBehaviour
 {
-    private Animator a_Animator;
+    private Animator astroAnimator;
     private float _rotateSpeed = 10f;
-    private bool AstroTriggered = false;
+    private bool _astroTriggered = false;
     void Start()
     {
-        a_Animator = GetComponent<Animator>();
+        astroAnimator = GetComponent<Animator>();
     }
 
     void Update()
@@ -20,17 +20,17 @@ public class Asteroid : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if(!AstroTriggered)
+        if(!_astroTriggered)
         {  
             if (other.tag == "Lazer")
             {
                 Destroy(other.gameObject);
             }
             GameObject.Find("Canvas").GetComponent<UI_Manger>().startWave(1);
-            a_Animator.SetTrigger("Explode_Astro");
+            astroAnimator.SetTrigger("Explode_Astro");
             GameObject.Find("Post Process Volume").GetComponent<PostProcessing>().SetChangeBloom(true);
             GameObject.Find("Audio Manger").GetComponent<Game_Audio_Manger>().ChangeMusic(2);
-            AstroTriggered = true;
+            _astroTriggered = true;
         }
     }
 }

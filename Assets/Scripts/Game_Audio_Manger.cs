@@ -6,7 +6,7 @@ public class Game_Audio_Manger : MonoBehaviour
 {
     private AudioSource _audioSource;
     [SerializeField]
-    private AudioClip[] _MusicClips;
+    private AudioClip[] _musicClips;
     void Start()
     {
 
@@ -16,7 +16,7 @@ public class Game_Audio_Manger : MonoBehaviour
     public void ChangeMusic(int musicId)
     {
         AudioSource source = gameObject.GetComponent<AudioSource>();
-        gameObject.GetComponent<AudioSource>().clip = _MusicClips[musicId];
+        gameObject.GetComponent<AudioSource>().clip = _musicClips[musicId];
         source.Play();
     }
 }
