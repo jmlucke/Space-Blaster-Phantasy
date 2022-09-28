@@ -12,19 +12,27 @@ public class Player : MonoBehaviour
     bool isWrappingY = false;
 
     //movement speed
-    float _speed=7f;
-    float _speed_boost = 10f;
+    [SerializeField]
+    private float _speed=5f;
+    [SerializeField]
+    private float _thrust = 3f;
+    [SerializeField]
+    private float _speedBoost = 10f;
     //PowerUps
    // [SerializeField]
     private bool _tripleShotIsActive = false;
+    private bool _burstShotIsActive = false;
+    //shield
     private bool _shieldIsActive = false;
+    private int _shieldHitCount=0;
+    //speed boost
     private bool _speedBoostIsActive = false;
 
     //Score related
     private int _score = 0;
     //somthing to count player extra lives
     [SerializeField]
-     int playerLives = 2;
+     int playerLives = 3;
     //Shield
     public GameObject shieldVisual;
     //Lazer settings
@@ -32,27 +40,41 @@ public class Player : MonoBehaviour
     private float _fireRate = 0.5f;
     private float _canFire = -1f;
     private float _powerUpRate = 5f;
+    //ammo
+    [SerializeField]
+    private int _ammoAmt=15;
+    private bool _hasAmmo = true;
     //projectiles prefabs
     public GameObject lazerPrefab;
     public GameObject tripleShotPrefab;
- 
-     
+    public GameObject burstShotPrefab;
+    //particle effect
+    private ParticleSystem _thrustEffect;
+    private GameObject _shieldObject;
+    private SpriteRenderer _shieldRenderer;
+    //Colors for shield
+    private Color _noDmgShieldColor = new Color(255, 182,0,183);
+    private Color _minorDmgShieldColor = new Color(255, 183, 23);
+    private Color _majorDmgShieldColor= new Color(255, 29, 23);
+    private UI_Manger _UIManger;
 
     void Start()
     {
         //take a posistion and zero in out x,y,z
         cam = Camera.main;
         mainRenderer = GetComponent<Renderer>();
- 
-            
+        _thrustEffect = GameObject.Find("Thruster Particle System").GetComponent<ParticleSystem>();
+        _UIManger = GameObject.Find("Canvas").GetComponent<UI_Manger>();
         //add null checking
+
+        //
 
     }
 
     // Update is called once per frame
     void Update()
     {
-      
+        Thrust();
         Movement();
         ScreenWrap();
         PlayerShoot();
@@ -77,20 +99,38 @@ public class Player : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
         {
-            PlaySound(0);
-            if (_tripleShotIsActive)
+
+            if (_hasAmmo)
             {
-                Instantiate(tripleShotPrefab, transform.position + new Vector3(0, 0.8f, 0), Quaternion.identity);
-                 
-                //Need to destory empty PreFab 
+                PlaySound(0);
+                _UIManger.UpdateAmmo(_ammoAmt);
+                _ammoAmt--;
+                if (_ammoAmt == 0) _hasAmmo = false;
+                if (_tripleShotIsActive)
+                {
+                    Instantiate(tripleShotPrefab, transform.position + new Vector3(0, 0.8f, 0), Quaternion.identity);
+
+                    //Need to destory empty PreFab 
+                }
+                else if(_burstShotIsActive)
+                {
+                    Instantiate(burstShotPrefab, transform.position + new Vector3(0, -0.2f, 0), Quaternion.identity);
+                }
+                else
+                {
+                    Instantiate(lazerPrefab, transform.position + new Vector3(0, 0.8f, 0), Quaternion.identity);
+                }
+                _canFire = Time.time + _fireRate;
+
             }
             else
             {
-                Instantiate(lazerPrefab, transform.position + new Vector3(0, 0.8f, 0), Quaternion.identity);
+                PlaySound(3);
             }
-            _canFire = Time.time + _fireRate;
+                 
 
         }
+    
     }
     //Controls screen wrap
     //Potential future issue with enemy location id
@@ -131,6 +171,25 @@ public class Player : MonoBehaviour
         transform.position = newPosition;
     }
 
+    void Thrust()
+    {
+         
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            //thrust
+            _thrust = 3;
+            //address lagged response.
+            if(!_thrustEffect.isPlaying) _thrustEffect.Play();
+        }
+        else
+        {
+            //not thrust
+            _thrust = 0;
+            if (_thrustEffect.isPlaying) _thrustEffect.Stop();
+        }
+
+    }
+
     //Controls Player Movement
     void Movement()
     {
@@ -138,23 +197,15 @@ public class Player : MonoBehaviour
         float verticalInput = Input.GetAxis("Vertical");
         // direction is a composite of vertical and horizontal
         Vector3 direction = new Vector3(horizontalInput, verticalInput, 0);
-        if(Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift))
-        {
-            //thrust
-
-        }
-        else
-        {
-            //not thrust
-        }
+ 
         if(_speedBoostIsActive)
         {
-            transform.Translate(direction * _speed * Time.deltaTime);
+            transform.Translate(direction * (_speedBoost + _thrust) * Time.deltaTime);
             PowerUpTimer(2);
         }
         else
         {
-            transform.Translate(direction * _speed_boost * Time.deltaTime);
+            transform.Translate(direction * (_speed + _thrust) * Time.deltaTime);
         }
           
     }
@@ -164,15 +215,49 @@ public class Player : MonoBehaviour
 
         shieldVisual.SetActive(state);
     }
+    public void IncrementShieldHitCount(int numHits)
+    {
 
+        _shieldHitCount += numHits;
+         
+    }
+    public void SetShieldColor()
+    {
+        Debug.Log("Shield Hit Change color " + _shieldHitCount);
+
+        switch(_shieldHitCount)
+        {
+            case 0:
+                 
+                //GameObject.Find("Shield").GetComponent<SpriteRenderer>().material.color = _noDmgShieldColor;
+                // play a sound effect for shield burst
+                PlaySound(4);
+
+                break;
+            case 1:
+                PlaySound(3);
+                GameObject.Find("Shield").GetComponent<SpriteRenderer>().material.color = _majorDmgShieldColor;
+                break;
+            case 2:
+                PlaySound(3);
+                GameObject.Find("Shield").GetComponent<SpriteRenderer>().material.color = _minorDmgShieldColor;
+                break;
+            case 3:
+                GameObject.Find("Shield").GetComponent<SpriteRenderer>().material.color = _noDmgShieldColor;
+                break;
+            default:
+                 
+                break;
+        }
+    }
     //Getter and Setter Functions
     public void UpdatePlayerLife(int number)
     {
         playerLives += number;
-        Debug.Log(playerLives);
+     //   Debug.Log(playerLives);
         if(!_shieldIsActive)
         {
-            GameObject.Find("Canvas").GetComponent<UI_Manger>().UpdateLives(playerLives);
+            _UIManger.UpdateLives(playerLives);
         }
     }
     public int GetPlayerLife()
@@ -184,7 +269,7 @@ public class Player : MonoBehaviour
     public void SetPowerUp(bool active, int powerUpType)
     {
         //change to switch statement later
-        PlaySound(2);
+        if(active)PlaySound(2);
         switch (powerUpType)
         {
             case 0:
@@ -194,6 +279,9 @@ public class Player : MonoBehaviour
             case 1:
                 _shieldIsActive = active;
                 Shield(active);
+                _shieldHitCount = 3;
+                SetShieldColor();
+                 
                // if (_shieldIsActive==true) UpdatePlayerLife(1);
 
                 //StartCoroutine(PowerUpTimer(powerUpType));
@@ -202,13 +290,48 @@ public class Player : MonoBehaviour
                 _speedBoostIsActive = active;
                 StartCoroutine(PowerUpTimer(powerUpType));
                 break;
+            case 3:
+                _burstShotIsActive = active;
+                StartCoroutine(PowerUpTimer(powerUpType));
+                break;
+
+                break;
             default:
                 break; 
 
         }
          
     }
+    public void SetCollectible(int collectibleType)
+    {
+        PlaySound(2);
+        switch (collectibleType)
+        {
+            case 0:
+                //ammo
+                _hasAmmo = true;
+                _ammoAmt = 15;
+                  _UIManger.ReloadAmmo();
+                //call reload ammo function.
+                break;
+            case 1:
+                //playerLives = 3;
+                if(playerLives!=3)
+                {
 
+                    UpdatePlayerLife(1);
+                    _UIManger.UpdateLives(playerLives);
+                }
+                //repair
+                 
+                //set ship damage up a level
+                break;
+            default:
+                break;
+
+        }
+
+    }
 
     //Wait Functions
     IEnumerator PowerUpTimer(int powerUpType)
@@ -216,8 +339,6 @@ public class Player : MonoBehaviour
         //Waits a certain amount of 
         
         yield return new WaitForSeconds(_powerUpRate);
-        //could be switch
- 
 
         switch (powerUpType)
         {
@@ -230,6 +351,9 @@ public class Player : MonoBehaviour
                 break;
             case 2:
                 _speedBoostIsActive = false;
+                break;
+            case 3:
+                _burstShotIsActive = false;
                 break;
             default:
                 break;
@@ -250,8 +374,16 @@ public class Player : MonoBehaviour
     {
         if(_shieldIsActive)
         {
-             //Shield id 1
-            SetPowerUp(false,1);
+            //Shield id 1
+             
+            IncrementShieldHitCount(-1);
+            SetShieldColor();
+            if (_shieldHitCount == 0)
+            {
+                //after 3 hits deactivate the shield
+                SetPowerUp(false, 1);
+            }
+             
             return;
 
         }

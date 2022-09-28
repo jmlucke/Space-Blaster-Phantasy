@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 994697911175368915}
   - component: {fileID: 994697911175368943}
   - component: {fileID: 994697911175368942}
-  - component: {fileID: 994697911175368941}
   - component: {fileID: 5226305479964068275}
   m_Layer: 0
   m_Name: speed_powerup
@@ -127,27 +126,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 4.1111064, y: 3.6724586}
   m_EdgeRadius: 0
---- !u!50 &994697911175368941
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7759318453837488500}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 0
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
 --- !u!95 &5226305479964068275
 Animator:
   serializedVersion: 4

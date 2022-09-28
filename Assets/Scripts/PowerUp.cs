@@ -5,7 +5,7 @@ using UnityEngine;
 public class PowerUp : MonoBehaviour
 {
     //GameObject move speed
-    float _speed = 2f;
+    float _speed = 2.5f;
     //Could do a renderer or zone or despawn timer.
     Renderer p_Renderer;
 
@@ -14,7 +14,7 @@ public class PowerUp : MonoBehaviour
     int powerUpType;
     void Start()
     {
-        p_Renderer = GetComponent<Renderer>();
+      //  p_Renderer = GetComponent<Renderer>();
     }
 
     // Update is called once per frame
@@ -22,11 +22,11 @@ public class PowerUp : MonoBehaviour
     {
         Vector3 direction = new Vector3(0, -_speed, 0);
         transform.Translate(direction * _speed * Time.deltaTime);
-
-        if (!p_Renderer.isVisible)
-        {
-            Destroy(this.gameObject);
-        }
+        //code marked for removal destroy zone is more reliable
+       // if (!p_Renderer.isVisible)
+       // {
+       //     Destroy(this.gameObject);
+      //  }
         // printPowerUpType(powerUpType);
     }
     public void printPowerUpType(int typeCode)
@@ -42,6 +42,9 @@ public class PowerUp : MonoBehaviour
                 break;
             case 2:
                 Debug.Log("Speed");
+                break;
+            case 3:
+                Debug.Log("Burst Shot");
                 break;
             default:
                 Debug.Log("Unknown PowerUp");
@@ -60,8 +63,9 @@ public class PowerUp : MonoBehaviour
                 GameObject.Find("Player").GetComponent<Player>().SetPowerUp(true, powerUpType);
 
             }
+            Destroy(this.gameObject);
         }
          
-        Destroy(this.gameObject);
+         
     }
  }

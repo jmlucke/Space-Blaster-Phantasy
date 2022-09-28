@@ -17,6 +17,8 @@ public class UI_Manger : MonoBehaviour
     private Image _lifeImage;
     [SerializeField]
     private Sprite[] _livesSprites;
+    [SerializeField]
+    private GameObject[] _ammoGameObjects;
     // Start is called before the first frame update
     void Start()
     {
@@ -43,6 +45,23 @@ public class UI_Manger : MonoBehaviour
     {
         _lifeImage.sprite = _livesSprites[lifeCount];
     }
+    public void UpdateAmmo(int img_Id)
+    {
+
+      
+        GameObject image = _ammoGameObjects[img_Id-1];
+        image.GetComponent<Image>().color = Color.black;
+    }
+    public void ReloadAmmo()
+    {
+        foreach(GameObject image in _ammoGameObjects)
+        {
+            image.GetComponent<Image>().color = Color.white;
+        }
+
+    }
+
+  
 
     public void startGameOver()
     {
@@ -50,12 +69,13 @@ public class UI_Manger : MonoBehaviour
 
 
     }
+ 
+
     public void startWave(int waveNum)
     {
         StartCoroutine(SetWave(waveNum));
-
-
     }
+    
 
     IEnumerator SetGameOver()
     {
