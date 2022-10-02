@@ -8,6 +8,7 @@ public class Player_Damage : MonoBehaviour
     private int _dmgThreshold=1;
     private Animator _dAnimator;
     private Player _player;
+     
     public GameObject dmgVisual;
     private Renderer _dSprite;
     private bool _animState=false;
@@ -18,6 +19,7 @@ public class Player_Damage : MonoBehaviour
         _dAnimator = GetComponent<Animator>();
          _dSprite = GetComponent<Renderer>();
         _player = GameObject.Find("Player").GetComponent<Player>();
+        
     }
 
     // Update is called once per frame
@@ -26,6 +28,8 @@ public class Player_Damage : MonoBehaviour
         if (_player!=null && !_animState && _player.GetPlayerLife() == _dmgThreshold)
         {
             _animState = true;
+ 
+            
             DmgVisualization(_animState);
             
         }

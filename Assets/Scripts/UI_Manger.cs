@@ -20,12 +20,18 @@ public class UI_Manger : MonoBehaviour
     [SerializeField]
     private GameObject[] _ammoGameObjects;
     // Start is called before the first frame update
+    private Slider _thrustBar;
+    private Image _thrustKnob;
+     
     void Start()
     {
          
         _scoreText.text= "Score: 0";
         _gameOverText.text = "";
         _Restart_Info.text = "";
+        _thrustBar = GameObject.Find("ThrustBar").GetComponent<Slider>();
+        _thrustKnob= GameObject.Find("Thrust Knob").GetComponent<Image>();
+
     }
 
     // Update is called once per frame
@@ -60,8 +66,18 @@ public class UI_Manger : MonoBehaviour
         }
 
     }
-
-  
+    public float ThrustAmmount()
+    {
+        return _thrustBar.value;
+    }
+    public void UpdateThrustAmount(float fuelAmt)
+    {
+          _thrustBar.value+= fuelAmt;     
+    }
+    public void ChangeKnobColor(int x, int y, int z, int t)
+    {
+        _thrustKnob.color= new Color (x, y, z, t);
+    }
 
     public void startGameOver()
     {

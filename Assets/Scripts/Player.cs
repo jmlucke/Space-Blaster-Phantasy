@@ -6,6 +6,7 @@ public class Player : MonoBehaviour
 {
     //camera used to test off screen location
     Camera cam;
+    private CameraShake _cameraMainShake;
     Renderer mainRenderer;
     //screewrap bools
     bool isWrappingX = false;
@@ -57,14 +58,21 @@ public class Player : MonoBehaviour
     private Color _minorDmgShieldColor = new Color(255, 183, 23);
     private Color _majorDmgShieldColor= new Color(255, 29, 23);
     private UI_Manger _UIManger;
+    //
+    private bool _canThrust = true;
+    [SerializeField]
+    private float _thrustRate = .1f;
+    private float _thrustTimer = -1f;
+    private GameObject _thrustBar;
 
     void Start()
     {
-        //take a posistion and zero in out x,y,z
+        //take a posistion and zero in out x,y,z for worldpoint
         cam = Camera.main;
         mainRenderer = GetComponent<Renderer>();
         _thrustEffect = GameObject.Find("Thruster Particle System").GetComponent<ParticleSystem>();
         _UIManger = GameObject.Find("Canvas").GetComponent<UI_Manger>();
+        _cameraMainShake = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraShake>();
         //add null checking
 
         //
@@ -174,21 +182,48 @@ public class Player : MonoBehaviour
     void Thrust()
     {
          
-        if (Input.GetKey(KeyCode.LeftShift))
+        if (Input.GetKey(KeyCode.LeftShift) && _canThrust == true)
         {
             //thrust
+            if(Time.time > _thrustTimer  )
+            {
+                _UIManger.UpdateThrustAmount(-1);
+                _thrustTimer = Time.time + _thrustRate;
+            }
+            if(_UIManger.ThrustAmmount()==0)
+            {
+                _canThrust = false;
+                _UIManger.ChangeKnobColor(255, 255, 255, 255);
+            }
             _thrust = 3;
             //address lagged response.
-            if(!_thrustEffect.isPlaying) _thrustEffect.Play();
+            if (!_thrustEffect.isPlaying) _thrustEffect.Play();
+        }
+        else if(_UIManger.ThrustAmmount() == 100)
+        {
+            _canThrust = true;
+            _UIManger.ChangeKnobColor(0, 0, 0, 255);
         }
         else
         {
             //not thrust
+            if(!Input.GetKey(KeyCode.LeftShift)&&_UIManger.ThrustAmmount()<100)
+            {
+            
+                if (Time.time > _thrustTimer)
+                {
+                    _UIManger.UpdateThrustAmount(1);
+                    _thrustTimer = Time.time + _thrustRate;
+                }
+            }
             _thrust = 0;
             if (_thrustEffect.isPlaying) _thrustEffect.Stop();
         }
 
     }
+
+ 
+
 
     //Controls Player Movement
     void Movement()
@@ -294,8 +329,7 @@ public class Player : MonoBehaviour
                 _burstShotIsActive = active;
                 StartCoroutine(PowerUpTimer(powerUpType));
                 break;
-
-                break;
+ 
             default:
                 break; 
 
@@ -387,7 +421,9 @@ public class Player : MonoBehaviour
             return;
 
         }
-
+        //duration,magnitude
+        //doesn't shake on player death
+        if(playerLives>1) StartCoroutine(_cameraMainShake.Shake(.3f, .2f));
         UpdatePlayerLife(-1);
     }
 
