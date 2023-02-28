@@ -9,7 +9,7 @@ public class GameManger : MonoBehaviour
     private bool _gameOver = false;
     void Start()
     {
-        
+         
     }
 
     // Update is called once per frame
@@ -20,7 +20,7 @@ public class GameManger : MonoBehaviour
             //could be rewritten to be more elegant
             if(Input.GetKeyDown(KeyCode.R))
             {
-                LoadGame();
+                LoadWave(1);
             }
 
             if (Input.GetKeyDown(KeyCode.M))
@@ -37,11 +37,27 @@ public class GameManger : MonoBehaviour
      
     public void LoadGame()
     {
-        SceneManager.LoadScene("Game");
+        SceneManager.LoadScene("Game"); 
     }
     public void ExitGameProgram()
     {
         Application.Quit();
+    }
+    public void PauseGameProgram()
+    {
+        Time.timeScale = 0;
+    }
+    public void ResumeGameProgram()
+    {
+        Time.timeScale = 1;
+    }
+    public void LoadWave(int waveNumber)
+    {
+        GameValues.wave = waveNumber;
+       // Debug.Log("LoadWave func "+GameValues.wave);
+        LoadGame();
+ 
+
     }
 
 }

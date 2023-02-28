@@ -5,29 +5,50 @@ using UnityEngine;
 public class PowerUp : MonoBehaviour
 {
     //GameObject move speed
-    float _speed = 2.5f;
+    float _speed = 2f;
+    float _speedToPlayer = 5f;
     //Could do a renderer or zone or despawn timer.
     Renderer p_Renderer;
 
     //PowerUp id 0-2
     [SerializeField]
     int powerUpType;
+    private Player _player;
     void Start()
     {
-      //  p_Renderer = GetComponent<Renderer>();
+        //  p_Renderer = GetComponent<Renderer>();
+        _player = GameObject.Find("Player").GetComponent<Player>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        Vector3 direction = new Vector3(0, -_speed, 0);
-        transform.Translate(direction * _speed * Time.deltaTime);
-        //code marked for removal destroy zone is more reliable
-       // if (!p_Renderer.isVisible)
-       // {
-       //     Destroy(this.gameObject);
-      //  }
-        // printPowerUpType(powerUpType);
+        
+        powerUpMovement();
+ 
+ 
+    }
+
+    private void powerUpMovement()
+    {
+        Vector3 p_position = _player.GetPlayerPosistion();
+        Vector3 direction;
+
+
+        if (Input.GetKey(KeyCode.C))
+        {
+            transform.position = Vector2.MoveTowards(transform.position, p_position, _speedToPlayer * Time.deltaTime);
+
+
+
+        }
+        else
+        {
+             direction =new Vector3(0, -_speed, 0);
+            transform.Translate(direction * _speed * Time.deltaTime);
+
+        }
+         
     }
     public void printPowerUpType(int typeCode)
     {
@@ -46,6 +67,12 @@ public class PowerUp : MonoBehaviour
             case 3:
                 Debug.Log("Burst Shot");
                 break;
+            case 4:
+                Debug.Log("Negative Bomb");
+                break;
+            case 5:
+                Debug.Log("Slow Powerup");
+                break;
             default:
                 Debug.Log("Unknown PowerUp");
                 break;
@@ -63,6 +90,11 @@ public class PowerUp : MonoBehaviour
                 GameObject.Find("Player").GetComponent<Player>().SetPowerUp(true, powerUpType);
 
             }
+            Destroy(this.gameObject);
+        }
+        else if(other.tag == "E_Laser")
+        {
+            Destroy(other.gameObject);
             Destroy(this.gameObject);
         }
          

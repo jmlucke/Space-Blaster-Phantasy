@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class CameraShake : MonoBehaviour
 {
-    //could use a plugin or animation for same effect
-    // strict seems appropriate
+   
+    
     public IEnumerator Shake(float duration, float magnitude)
     {
         Vector3 startPosition = transform.position;
         float amountOfTime = 0f;
-       // Debug.Log();
+ 
         while (amountOfTime < duration)
         {
             //x and y axis

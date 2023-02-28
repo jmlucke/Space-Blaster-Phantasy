@@ -12,7 +12,7 @@ public class UI_Manger : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI _gameOverText;
     [SerializeField]
-    private TextMeshProUGUI _Restart_Info;
+    private TextMeshProUGUI _restartInfo;
     [SerializeField]
     private Image _lifeImage;
     [SerializeField]
@@ -26,9 +26,9 @@ public class UI_Manger : MonoBehaviour
     void Start()
     {
          
-        _scoreText.text= "Score: 0";
+        _scoreText.text= "Score: " + GameValues.score;
         _gameOverText.text = "";
-        _Restart_Info.text = "";
+        _restartInfo.text = "";
         _thrustBar = GameObject.Find("ThrustBar").GetComponent<Slider>();
         _thrustKnob= GameObject.Find("Thrust Knob").GetComponent<Image>();
 
@@ -66,7 +66,7 @@ public class UI_Manger : MonoBehaviour
         }
 
     }
-    public float ThrustAmmount()
+    public float ThrustAmount()
     {
         return _thrustBar.value;
     }
@@ -96,7 +96,7 @@ public class UI_Manger : MonoBehaviour
     IEnumerator SetGameOver()
     {
         
-        _Restart_Info.text = "Press R to Restart Level<br>          M to go to the menu";
+        _restartInfo.text = "Press R to Restart Level<br>          M to go to the menu";
         while (1==1)
         {
             _gameOverText.text = "Game Over";
@@ -112,7 +112,8 @@ public class UI_Manger : MonoBehaviour
     IEnumerator SetWave(int waveNum)
     {
         int count = 0;
-        _Restart_Info.text = "'Why did you blow up the asteriod?'";
+        _restartInfo.text = "'Why did you blow up the asteriod?'";
+        GameValues.wave = waveNum;
         while (count<2)
         {
             _gameOverText.text = "Wave " + waveNum;
@@ -121,7 +122,7 @@ public class UI_Manger : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
             count++;
         }
-        _Restart_Info.text = "";
+        _restartInfo.text = "";
         GameObject.Find("Spawn_Manger").GetComponent<Spawn_Manger>().SetIsEnemySpawnActive(true);
 
     }

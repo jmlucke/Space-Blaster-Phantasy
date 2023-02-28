@@ -4,16 +4,27 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Lazer
   - Enemy
   - Destruct
   - PowerUp
   - Score
-  - E_Lazer
   - Bullet
   - Projectile
   - AmmoDisplay
   - Collectible
+  - player_zone
+  - E_Beam
+  - PostProcessor
+  - detect_lazer_zone
+  - Laser
+  - E_Laser
+  - E_Lazer
+  - Lazer
+  - boss
+  - boss_r
+  - boss_l
+  - boss_h
+  - B_Beam
   layers:
   - Default
   - TransparentFX
